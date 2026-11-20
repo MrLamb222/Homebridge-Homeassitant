@@ -1,0 +1,27 @@
+name: Homebridge
+version: "1.0.0"
+slug: homebridge
+description: Homebridge (official Docker image) running as a Home Assistant add-on
+url: https://github.com/homebridge/docker-homebridge
+arch:
+  - aarch64
+  - amd64
+# The image ships its own process supervisor, so Home Assistant must not add one.
+init: false
+# HomeKit discovery needs the host network.
+host_network: true
+startup: application
+boot: auto
+# Homebridge keeps its config, plugins and HomeKit pairings in /homebridge.
+# addon_config is mounted there so it survives rebuilds and shows up in the
+# File editor / Samba share under "addon_configs".
+map:
+  - type: addon_config
+    read_only: false
+    path: /homebridge
+ports:
+  8581/tcp: 8581
+ports_description:
+  8581/tcp: Homebridge web UI
+webui: "http://[HOST]:[PORT:8581]"
+watchdog: "http://[HOST]:[PORT:8581]/"
